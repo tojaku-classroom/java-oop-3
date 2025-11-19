@@ -1,7 +1,10 @@
 hr/obskc/niop/projektoop/voznipark/VozniPark.class
 hr/obskc/niop/projektoop/ProjektOop.class
+hr/obskc/niop/projektoop/studenti/Student.class
 hr/obskc/niop/projektoop/voznipark/Kamion.class
 hr/obskc/niop/projektoop/voznipark/Motocikl.class
 hr/obskc/niop/projektoop/voznipark/Automobil.class
 hr/obskc/niop/projektoop/voznipark/Vozilo.class
 hr/obskc/niop/projektoop/voznipark/Stanje.class
+hr/obskc/niop/projektoop/studenti/Studenti.class
+hr/obskc/niop/projektoop/studenti/Osoba.class

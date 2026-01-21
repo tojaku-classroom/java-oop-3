@@ -1,0 +1,2 @@
+Dobar dan, svijete!
+Ovo je primjer pisanja u datoteku pomoću klase FileWriter.

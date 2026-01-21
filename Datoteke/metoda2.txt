@@ -1,0 +1,2 @@
+Upotreba BufferedWriter-a
+Nova linija

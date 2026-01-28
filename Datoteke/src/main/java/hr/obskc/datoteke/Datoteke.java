@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -11,6 +12,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
@@ -21,7 +24,10 @@ public class Datoteke {
         // pisanjeTekstnihDatoteka();
         // citanjeTekstnihDatoteka();
         // pisanjeBinarnihDatoteka();
-        citanjeBinarneDatoteke();
+        // citanjeBinarnihDatoteka();
+        // upravljanjeDatotekama();
+        // upravljanjeMapama();
+        kopiranjeIPremjestanjeDatoteka();
     }
 
     public static void pisanjeTekstnihDatoteka() {
@@ -96,7 +102,7 @@ public class Datoteke {
         }
     }
 
-    public static void citanjeBinarneDatoteke() {
+    public static void citanjeBinarnihDatoteka() {
         try (DataInputStream dis = new DataInputStream(new FileInputStream("binarna.bin"))) {
             int cijeliBroj = dis.readInt();
             double realanBroj = dis.readDouble();
@@ -107,6 +113,104 @@ public class Datoteke {
         } catch (IOException ex) {
             ex.printStackTrace();
             System.err.println("Greška čitanja binarne datoteke: " + ex.getMessage());
+        }
+    }
+    
+    public static void upravljanjeDatotekama() {
+        File file = new File("operacije.txt");
+        
+        // Provjera
+        if (file.exists()) {
+            System.out.println("Datoteka postoji!");
+        } else {
+            System.out.println("Datoteka NE postoji!");
+        }
+        
+        // Stvaranje
+        try {
+            boolean stvorena = file.createNewFile();
+            if (stvorena) {
+                System.out.println("Datoteka stvorena: " + file.getName());
+            } else {
+                System.out.println("Datoteka već postoji!");
+            }
+        } catch (IOException ex) {
+            System.err.println("Dogodila se greška prilikom stvaranja datoteke.");
+        }
+        
+        // Provjera metapodataka
+        System.out.println("Apsolutna putanja: " + file.getAbsolutePath());
+        System.out.println("Možemo li pisati: " + file.canWrite());
+        System.out.println("Možemo li čitati: " + file.canRead());
+        System.out.println("Veličina: " + file.length());
+        System.out.println("Je li mapa: " + file.isDirectory());
+        System.out.println("Je li datoteka: " + file.isFile());
+        
+        // Brisanje
+        if (file.delete()) {
+            System.out.println("Datoteka uspješno obrisana.");
+        } else {
+            System.out.println("Datoteka nije obrisana!");
+        }
+    }
+    
+    public static void upravljanjeMapama() {
+        // Stvaranje
+        File dir = new File("mojamapa");
+        if (dir.mkdir()) {
+            System.out.println("Mapa je uspješno stvorena.");
+        }
+        
+        // Ugnježđene mape
+        File ndir = new File("maparoditelj/mapadijete/mapaunuce");
+        if (ndir.mkdirs()) {
+            System.out.println("Mape su uspješno stvorene.");
+        }
+        
+        // Listanje sadržaja mape
+        File radna = new File(".");
+        String[] popis = radna.list();
+        System.out.println("U mapi se nalazi sljedeće:");
+        if (popis != null) {
+            for (String objekt : popis) {
+                System.out.println("- " + objekt);
+            }
+        }
+        
+        // Listanje sadržaja mape kao objekti
+        File[] popis2 = radna.listFiles();
+        System.out.println("U mapi se nalaze sljedeći OBJEKTI:");
+        if (popis2 != null) {
+            for (File objekt2 : popis2) {
+                System.out.println("- " + objekt2.getName() + 
+                        " " + (objekt2.isDirectory() ? "mapa" : "datoteka") + "");
+            }
+        }
+        
+        // Brisanje mapa
+        dir.delete();
+        ndir.delete(); // <-- neće izbrisati jer nije prazna
+    }
+    
+    public static void kopiranjeIPremjestanjeDatoteka() {
+        try {
+            // Definiranje izvora i odredišta
+            Path izvor = Paths.get("izvor.txt");
+            Path odrediste = Paths.get("odrediste.txt");
+            
+            // Stvaranje i pisanje u datoteku izvora
+            Files.writeString(izvor, "Ovo je sadržaj datoteke izvora");
+            
+            // Kopiranje
+            Files.copy(izvor, odrediste, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Kopiranje izvršeno");
+            
+            // Premještanje
+            Path novaLokacija = Paths.get("./maparoditelj/premjesteno.txt");
+            Files.move(izvor, novaLokacija, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Premještanje izvršeno");
+        } catch (IOException ex) {
+            System.err.println("Dogodila se greška!");
         }
     }
 }

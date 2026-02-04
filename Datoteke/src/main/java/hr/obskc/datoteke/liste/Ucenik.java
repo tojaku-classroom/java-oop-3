@@ -3,8 +3,9 @@ package hr.obskc.datoteke.liste;
 import java.io.Serializable;
 
 public class Ucenik implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     private int id;
     private String ime;
     private int starost;
@@ -37,7 +38,4 @@ public class Ucenik implements Serializable {
     public String toString() {
         return String.format("Student: [%d] %s (%d) %.2f", id, ime, starost, prosjek);
     }
-    
-    
-    
 }

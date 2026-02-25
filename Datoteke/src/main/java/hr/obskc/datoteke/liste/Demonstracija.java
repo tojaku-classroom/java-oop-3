@@ -54,7 +54,7 @@ public class Demonstracija {
     private static void ispisUcenika(List<Ucenik> ucenici) {
         if (!ucenici.isEmpty()) {
             for (Ucenik ucenik : ucenici) {
-                System.out.println("- " + ucenik.toString());
+                System.out.println(" - " + ucenik.toString());
             }
         } else {
             System.out.println("Nema učenika");

@@ -1,0 +1,2 @@
+1|Testirati program|true|3
+2|Pisati test|false|3

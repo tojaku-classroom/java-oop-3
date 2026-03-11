@@ -1,9 +1,14 @@
 hr/obskc/datoteke/Osoba.class
 hr/obskc/datoteke/liste/NioDemonstracija.class
-hr/obskc/datoteke/liste/ObjektSpremanje.class
 hr/obskc/datoteke/Serijalizacija.class
+hr/obskc/datoteke/liste/Ucenik.class
+hr/obskc/datoteke/zadaci/Aplikacija.class
+hr/obskc/datoteke/liste/TekstSpremanje.class
+hr/obskc/datoteke/zadaci/NioSpremanje.class
+hr/obskc/datoteke/liste/ObjektSpremanje.class
+hr/obskc/datoteke/zadaci/TekstSpremanje.class
 hr/obskc/datoteke/Datoteke.class
 hr/obskc/datoteke/PostavkeZipDemonstracija.class
-hr/obskc/datoteke/liste/Ucenik.class
-hr/obskc/datoteke/liste/TekstSpremanje.class
 hr/obskc/datoteke/liste/Demonstracija.class
+hr/obskc/datoteke/zadaci/ObjektSpremanje.class
+hr/obskc/datoteke/zadaci/Zadatak.class

@@ -1,0 +1,87 @@
+package hr.obskc.baze.bazepodataka;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class KolegijRepository {
+
+    public static void stvoriTablice() throws SQLException {
+        String sqlKolegiji = "CREATE TABLE IF NOT EXISTS kolegiji ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "naziv TEXT NOT NULL,"
+                + "slobodna_mjesta INTEGER NOT NULL"
+                + ");";
+
+        String sqlUpisi = "CREATE TABLE IF NOT EXISTS upisi ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "student_id INTEGER NOT NULL,"
+                + "kolegij_id INTEGER NOT NULL,"
+                + "FOREIGN KEY (student_id) REFERENCES studenti(id),"
+                + "FOREIGN KEY (kolegij_id) REFERENCES kolegiji(id)"
+                + ");";
+
+        try (Statement stmt = BazaPodatakaSingleton.getVeza().createStatement()) {
+            stmt.execute(sqlKolegiji);
+            stmt.execute(sqlUpisi);
+            System.out.println("Tablice su spremne");
+        }
+    }
+
+    public static void spremi(String naziv, int slobodnaMjesta) throws SQLException {
+        String sql = "INSERT INTO kolegiji (naziv, slobodna_mjesta) VALUES (?, ?)";
+
+        try (PreparedStatement stmt = BazaPodatakaSingleton.getVeza().prepareStatement(sql)) {
+            stmt.setString(1, naziv);
+            stmt.setInt(2, slobodnaMjesta);
+            stmt.executeUpdate();
+            System.out.println("Kolegij je spremljen u bazu podataka");
+        }
+    }
+    
+    public static List<Kolegij> dohvatiSve() throws SQLException {
+        List<Kolegij> kolegiji = new ArrayList<>();
+        String sql = "SELECT id, naziv, slobodna_mjesta FROM kolegiji";
+        
+        try (Statement stmt = BazaPodatakaSingleton.getVeza().createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            while (rs.next()) {
+                Kolegij kolegij = new Kolegij(
+                        rs.getInt("id"),
+                        rs.getString("naziv"),
+                        rs.getInt("slobodna_mjesta")
+                );
+                kolegiji.add(kolegij);
+            }
+        }
+        
+        return kolegiji;
+    }
+    
+    // Prikaz transakcija u bazi podataka
+    // Trasakcija = niz odvojenih koraka promjena u bazi podataka koji se moraju izvršiti
+    // po principu "sve ili ništa"
+    public static void upisNaKolegij(int studentId, int kolegijId) throws SQLException {
+        Connection veza = BazaPodatakaSingleton.getVeza();
+        veza.setAutoCommit(false); // Način rada za transakcije
+        
+        try {
+            // Ovdje se izvršava transakcija ...
+            veza.commit(); // Transakcija je prošla bez problema, možemo je potvrditi
+            System.out.println("Transakcija je uspjela");
+        } catch (SQLException e) {
+            veza.rollback(); // Vraćanje baze podataka u originalno stanje
+            System.err.println("Greška prilikom izvršenja transakcije; baza podataka vraćena u originalno stanje: " + e.getMessage());
+            throw e;
+        } finally {
+            veza.setAutoCommit(true); // Isključujemo transkcijski način rada
+        }
+        
+    }
+
+}

@@ -42,14 +42,14 @@ public class KolegijRepository {
             System.out.println("Kolegij je spremljen u bazu podataka");
         }
     }
-    
+
     public static List<Kolegij> dohvatiSve() throws SQLException {
         List<Kolegij> kolegiji = new ArrayList<>();
         String sql = "SELECT id, naziv, slobodna_mjesta FROM kolegiji";
-        
+
         try (Statement stmt = BazaPodatakaSingleton.getVeza().createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
-            
+
             while (rs.next()) {
                 Kolegij kolegij = new Kolegij(
                         rs.getInt("id"),
@@ -59,17 +59,17 @@ public class KolegijRepository {
                 kolegiji.add(kolegij);
             }
         }
-        
+
         return kolegiji;
     }
-    
+
     // Prikaz transakcija u bazi podataka
     // Trasakcija = niz odvojenih koraka promjena u bazi podataka koji se moraju izvršiti
     // po principu "sve ili ništa"
     public static void upisNaKolegij(int studentId, int kolegijId) throws SQLException {
         Connection veza = BazaPodatakaSingleton.getVeza();
         veza.setAutoCommit(false); // Način rada za transakcije
-        
+
         try {
             // Operacija 1 - smanjivanje slobodnih mjesta (samo ako ih ima)
             String smanjiBroj = "UPDATE kolegiji SET slobodna_mjesta = slobodna_mjesta - 1 "
@@ -82,10 +82,7 @@ public class KolegijRepository {
                 }
                 System.out.println("Korak 1: slobodna mjesta smanjena za 1");
             }
-            
-            // Simulacija problema s upisom
-            // throw new SQLException("Simulacija greške u procesu upisa!");
-            
+
             // Operacija 2 - upis studenta na kolegij
             String dodajUpis = "INSERT INTO upisi (student_id, kolegij_id) VALUES (?, ?)";
             try (PreparedStatement stmt = veza.prepareStatement(dodajUpis)) {
@@ -94,7 +91,7 @@ public class KolegijRepository {
                 stmt.executeUpdate();
                 System.out.println("Korak 2: Student " + studentId + " je upisan na kolegij " + kolegijId);
             }
-            
+
             veza.commit(); // Transakcija je prošla bez problema, možemo je potvrditi
             System.out.println("Transakcija je uspjela");
         } catch (SQLException e) {
@@ -104,7 +101,7 @@ public class KolegijRepository {
         } finally {
             veza.setAutoCommit(true); // Isključujemo transkcijski način rada
         }
-        
+
     }
 
 }

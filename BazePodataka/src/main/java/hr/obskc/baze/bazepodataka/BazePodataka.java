@@ -33,8 +33,8 @@ public class BazePodataka {
             // Demonstracija transakcija
             KolegijRepository.stvoriTablice();
             
-            KolegijRepository.spremi("Matematika", 2);
-            KolegijRepository.spremi("Fizika", 1);
+            // KolegijRepository.spremi("Matematika", 2);
+            // KolegijRepository.spremi("Fizika", 1);
             
             System.out.println("\nPopis kolegija:");
             for (Kolegij k : KolegijRepository.dohvatiSve()) {

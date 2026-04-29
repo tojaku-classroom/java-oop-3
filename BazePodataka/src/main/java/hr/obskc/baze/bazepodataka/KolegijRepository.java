@@ -71,7 +71,30 @@ public class KolegijRepository {
         veza.setAutoCommit(false); // Način rada za transakcije
         
         try {
-            // Ovdje se izvršava transakcija ...
+            // Operacija 1 - smanjivanje slobodnih mjesta (samo ako ih ima)
+            String smanjiBroj = "UPDATE kolegiji SET slobodna_mjesta = slobodna_mjesta - 1 "
+                    + "WHERE id = ? AND slobodna_mjesta > 0";
+            try (PreparedStatement stmt = veza.prepareStatement(smanjiBroj)) {
+                stmt.setInt(1, kolegijId);
+                int promjena = stmt.executeUpdate();
+                if (promjena == 0) {
+                    throw new SQLException("Nema slobodnih mjesta na kolegiju " + kolegijId);
+                }
+                System.out.println("Korak 1: slobodna mjesta smanjena za 1");
+            }
+            
+            // Simulacija problema s upisom
+            // throw new SQLException("Simulacija greške u procesu upisa!");
+            
+            // Operacija 2 - upis studenta na kolegij
+            String dodajUpis = "INSERT INTO upisi (student_id, kolegij_id) VALUES (?, ?)";
+            try (PreparedStatement stmt = veza.prepareStatement(dodajUpis)) {
+                stmt.setInt(1, studentId);
+                stmt.setInt(2, kolegijId);
+                stmt.executeUpdate();
+                System.out.println("Korak 2: Student " + studentId + " je upisan na kolegij " + kolegijId);
+            }
+            
             veza.commit(); // Transakcija je prošla bez problema, možemo je potvrditi
             System.out.println("Transakcija je uspjela");
         } catch (SQLException e) {

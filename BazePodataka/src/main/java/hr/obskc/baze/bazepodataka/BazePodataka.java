@@ -30,6 +30,26 @@ public class BazePodataka {
                 System.out.println(s.toString());
             }
             
+            // Demonstracija transakcija
+            KolegijRepository.stvoriTablice();
+            
+            KolegijRepository.spremi("Matematika", 2);
+            KolegijRepository.spremi("Fizika", 1);
+            
+            System.out.println("\nPopis kolegija:");
+            for (Kolegij k : KolegijRepository.dohvatiSve()) {
+                System.out.println(k.toString());
+            }
+            
+            KolegijRepository.upisNaKolegij(1, 1); // Pero na Matematiku
+            KolegijRepository.upisNaKolegij(2, 1); // Ana na Matematiku
+            KolegijRepository.upisNaKolegij(5, 2); // Đuro na Fiziku - uspjeh!
+            KolegijRepository.upisNaKolegij(4, 2); // Joško na Fiziku - nema mjesta!
+            
+            System.out.println("\nPopis kolegija:");
+            for (Kolegij k : KolegijRepository.dohvatiSve()) {
+                System.out.println(k.toString());
+            }
         } catch (SQLException e) {
             System.err.println("Greška u radu s bazom podataka: " + e.getMessage());
             e.printStackTrace();

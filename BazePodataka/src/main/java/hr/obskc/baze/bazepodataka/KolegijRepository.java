@@ -68,6 +68,18 @@ public class KolegijRepository {
     // po principu "sve ili ništa"
     public static void upisNaKolegij(int studentId, int kolegijId) throws SQLException {
         Connection veza = BazaPodatakaSingleton.getVeza();
+
+        // Provjera je li student već upisan na kolegij
+        String provjeriUpis = "SELECT COUNT(*) FROM upisi WHERE student_id = ? AND kolegij_id = ?";
+        try (PreparedStatement stmt = veza.prepareStatement(provjeriUpis)) {
+            stmt.setInt(1, studentId);
+            stmt.setInt(2, kolegijId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                throw new SQLException("Student je već upisan na kolegij");
+            }
+        }
+
         veza.setAutoCommit(false); // Način rada za transakcije
 
         try {
